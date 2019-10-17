@@ -9,13 +9,12 @@ ENV SERVER_PROTOCOL="http" \
 EXPOSE 80/tcp
 EXPOSE 443/tcp
 
-VOLUME /etc/grafana
-VOLUME /var/lib/grafana
+VOLUME [ "/etc/grafana", "/var/lib/grafana" ]
 
 # grafana image uses already at this point grafana user. apk needs root permissions
 USER root
 
-COPY grafana/conf/grafana.ini /etc/grafana/grafana.ini
+COPY conf/grafana.ini /etc/grafana/grafana.ini
 
 RUN chown grafana:grafana /etc/grafana/grafana.ini \
     && apk add --update libcap \ 
