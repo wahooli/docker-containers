@@ -1,0 +1,25 @@
+#!/usr/bin/with-contenv bash
+echo "**** Loading configuration values ****"
+# cleanup pid if it exists
+
+setConf () {
+	rootTag="Config"
+	[[ -n "$3" ]] && \
+		rootTag="$3"
+	echo "**** Setting <$rootTag><$1> value to $2 ****"
+	sed -i -e "/<$rootTag>/,/<\/$rootTag>/ s|<$1>[0-9a-z.]\{1,\}</$1>|<$1>$2</$1>|g" /config/config.xml
+}
+
+if [[ -e /config/config.xml ]]; then
+	echo "**** Found configuration ****"
+	[[ -n "$HTTP_PORT" ]] && \
+		setConf "Port" "$HTTP_PORT"
+	[[ -n "$HTTPS_PORT" ]] && \
+		setConf "SslPort" "$HTTPS_PORT"
+	[[ -n "$BIND_ADDRESS" ]] && \
+		setConf "BindAddress" "$BIND_ADDRESS"
+	[[ -n "$ENABLE_SSL" ]] && \
+		setConf "EnableSsl" "$ENABLE_SSL"
+	[[ -z "$LOG_LEVEL" ]] && \
+		setConf "LogLevel" "$LOG_LEVEL"
+fi
